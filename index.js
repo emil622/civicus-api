@@ -1,8 +1,14 @@
-const express = require('express');
-const { Sequelize, DataTypes } = require('sequelize');
+import express, { json } from 'express';
+import { Sequelize, DataTypes } from 'sequelize';
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: 'postgres'
+    dialect: 'postgres',
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
+    }
 });
 
 const SensorData = sequelize.define('sensor-data', {
@@ -21,20 +27,26 @@ const SensorData = sequelize.define('sensor-data', {
 });
 
 const app = express();
-app.use(express.json());
-
-const dataList = [];
+app.use(json());
 
 app.get('/data', async (req, res) => {
-    const allData = await SensorData.findAll();
-    res.status(200).send(allData);
+    try {
+        const allData = await SensorData.findAll();
+        res.status(200).send(allData);
+    } catch (error) {
+        console.log(error);
+    }
     return;
 });
 
 app.post('/data', async (req, res) => {
-    let data = req.body;
-    const sensorData = await SensorData.create(data);
-    res.status(201).send(data);
+    try {
+        let data = req.body;
+        const sensorData = await SensorData.create(data);
+        res.status(201).send(data);
+    } catch (error) {
+        console.log(error);
+    }
     return;
 });
 
