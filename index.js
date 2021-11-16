@@ -1,5 +1,5 @@
-import express, { json } from 'express';
-import { Sequelize, DataTypes } from 'sequelize';
+const express = require('express');
+const { Sequelize, DataTypes } = require('sequelize');
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
