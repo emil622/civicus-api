@@ -27,7 +27,7 @@ const SensorData = sequelize.define('sensor-data', {
 });
 
 const app = express();
-app.use(json());
+app.use(express.json());
 
 app.get('/data', async (req, res) => {
     try {
